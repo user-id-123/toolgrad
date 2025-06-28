@@ -3,25 +3,20 @@ from langchain_core.prompts import ChatPromptTemplate
 SCHEMA_INCONTEXT_EXAMPLE = """As an example, for the schema {{"properties": {{"foo": {{"title": "Foo", "description": "a list of strings", "type": "array", "items": {{"type": "string"}}}}}}, "required": ["foo"]}}
 the object {{"foo": ["bar", "baz"]}} is a well-formatted instance of the schema. The object {{"properties": {{"foo": ["bar", "baz"]}}}} is not well-formatted. You should also ensure the output contains all the required fields in the schema."""
 
-TOOLUSE_PROPOSER = ChatPromptTemplate.from_template(
+TOOLUSE_PROPOSER_WOO = ChatPromptTemplate.from_template(
     """You are tasked with augumenting an API-use workflow with more APIs from a given library so that it can serve for more advanced tasks.
 Given the following information that provides the context, please make three API-use proposals to augument the current workflow.
-To do so, you should first recall what APIs you can use in the library and then make the proposals.
-The output should be formatted as a JSON instance that conforms to the JSON schema explained below.
 
 The current workflow:
 {workflow_cur}
 
-The proposed APIs in the previous iteration:
-{api_proposals}
-
-When you decide to respond to the user, you should output a json object by following the schema below:
-{json_schema}
+The following is a pool of APIs that you can use:
+{api_all}
 
 Notes:
-- You can have multiple or just one API(s) in each proposal.
+- Please reply in the required data structure.
+- To select an API, you should return its name.
 - If you do not have any additional tools to propose, you can respond with None.
-- When selecting an API, you should use the name after "functions." only. For example, it should be `9f6e2309` instead of `functions.9f6e2309`"".
 """)
 
 STRUCTURER_TEMPLATE = ChatPromptTemplate.from_template(
